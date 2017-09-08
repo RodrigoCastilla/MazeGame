@@ -1,10 +1,10 @@
 package Controller;
+import Controller.FileLoader;
+import Controller.ScoreGui;
 import Model.HighScore;
-import Model.MazeObject;
 import Model.TheArchitect;
 import Model.TimeCalculator;
 import Model.TimeKeeper;
-import View.GameView;
 import View.MainView;
 import javax.swing.*;
 
@@ -12,58 +12,33 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class GameManager implements ActionListener
+public class GameManager extends JFrame implements ActionListener
 {
 
-        
-    private HighScore hs;  
-    private int catFileName=01;
-    private Container cp;
-    private FileLoader fl = new FileLoader();
-    //create menu items
-    private MainView vistaPrincipal;
-    //end create menu items
-    private JLabel shagLabel;
-    private int ix;
-    private int jx;
-    private int timeLeft;
-    private JPanel progBarPanel;
-    private JLabel[][] labelMatrix;
-    private TimeCalculator timeCalc;
-    private  JProgressBar progressBar;
-    private MazeObject mo;
-    private JPanel newPanel;// = new JPanel();
-    private TheArchitect theArc = new TheArchitect();
-    private String[][] scrapMatrix; 
-    private  Timer timely; 
-    private TimeKeeper tk;
-    private  String playerName;
-    private int levelNum=1;
-    private GameView game;
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+        private MainView vistaPrincipal;
 
     public GameManager()
     {
+        super("Maze, a game of wondering"); //call super to initilize title bar of G.U.I.
+        cp=getContentPane();
+        shagLabel = new JLabel("",new ImageIcon("yeababyyea.jpg"),JLabel.LEFT);//GUI background for initial load
+        cp.add(shagLabel);
+        //Add Exit & New Game Menu Items
         vistaPrincipal = new MainView();
         this.vistaPrincipal.getExitBtn().addActionListener(this);
         this.vistaPrincipal.getStartBtn().addActionListener(this);
         this.vistaPrincipal.getLoadBtn().addActionListener(this);
         this.vistaPrincipal.getEnterNameBtn().addActionListener(this);
         this.vistaPrincipal.getHighscoreBtn().addActionListener(this);
-        this.vistaPrincipal.getSaveHSBtn().addActionListener(this);
-        
-        game = new GameView();
-        cp = vistaPrincipal.getContenedor();
-        //shagLabel = new JLabel("",new ImageIcon("yeababyyea.jpg"),JLabel.LEFT);//GUI background for initial load
-        //cp.add(shagLabel);
-        game.setContenedor(cp);
+        this.vistaPrincipal.getSaveHSBtn().addActionListener(this);           
         newPanel = new JPanel();
         hs = new HighScore();
         tk=new TimeKeeper();
-        vistaPrincipal.pack();
+        pack();
         vistaPrincipal.setVisible (true);//show our menu bar and shagLabel.. Yea baby Yea! Whoa.. to much java.
     }//end constructor
      
@@ -118,7 +93,6 @@ public class GameManager implements ActionListener
            JPanel dimondsPanel = new JPanel();
            dimondsPanel.add(mainLabel);
            cp.add(dimondsPanel,BorderLayout.SOUTH);
-           game.setContenedor(cp);
        }//end method
    }//end inner class
     
@@ -167,9 +141,9 @@ public class GameManager implements ActionListener
      {
         if (event == "newLoad")
          {       
-             vistaPrincipal.remove(newPanel);//remove the previous level's game from the screen
+             remove(newPanel);//remove the previous level's game from the screen
              if(progBarPanel !=null)//remove the progress bar from the gui as long as its already been created.
-             vistaPrincipal.remove(progBarPanel);
+             remove(progBarPanel);
              String[][] temp = fl.getGameMatrix();
              scrapMatrix = new String[fl.getMatrixSizeRow()][fl.getMatrixSizeColumn()];   
              for (int i = 0; i < scrapMatrix.length; i++){
@@ -188,7 +162,6 @@ public class GameManager implements ActionListener
              progressBar.setStringPainted(true);
              progBarPanel.add(progressBar);
              cp.add(progBarPanel,BorderLayout.NORTH);
-             game.setContenedor(cp);
              newPanel = new JPanel();
              newPanel.setLayout(new GridLayout(fl.getMatrixSizeRow(),fl.getMatrixSizeColumn()));//set our panel for the game to the size of the matrix      
              labelMatrix=new JLabel[fl.getMatrixSizeRow()][fl.getMatrixSizeColumn()];
@@ -197,7 +170,7 @@ public class GameManager implements ActionListener
         else if(event =="updateLoad")//every time the player moves the gui must be updated.
         {
             scrapMatrix = theArc.getUpdatedMatrix();//get the new matrix to be displayed from the architect
-            vistaPrincipal.remove(newPanel);//remove the old game
+            remove(newPanel);//remove the old game
             newPanel = new JPanel();
             newPanel.setLayout(new GridLayout(fl.getMatrixSizeRow(),fl.getMatrixSizeColumn()));
             newPanel.addKeyListener( new MyKeyHandler() );
@@ -206,16 +179,31 @@ public class GameManager implements ActionListener
           for (int i = 0; i < labelMatrix.length; i++){
               for (int j = 0; j < labelMatrix[i].length; j++){
 
-				labelMatrix[i][j]=new MazeObject(newPanel,scrapMatrix[i][j]);//add our maze images into the gui
+				labelMatrix[i][j]=new mazeObject(scrapMatrix[i][j]);//add our maze images into the gui
               }}//end double for loop
          cp.add(newPanel);
-         game.setContenedor(cp);
-         vistaPrincipal.remove(shagLabel);//remove the constructors initial background
+         remove(shagLabel);//remove the constructors initial background
          System.gc();//force java to clean up memory use.
-         vistaPrincipal.pack();
-         vistaPrincipal.setVisible (true);
+         pack();
+         setVisible (true);
          newPanel.grabFocus();  
      }//end loadMatrixGui method
+ 
+    public class mazeObject extends JLabel//inner class for each maze object, aka wall, player etc
+    {
+    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+        public mazeObject(String fileName)
+        {
+            fileName+=".png";
+            JLabel fancyLabel;
+            fancyLabel = new JLabel("",new ImageIcon(fileName),JLabel.LEFT);
+            newPanel.add(fancyLabel);
+        }
+    }//end inner class
         
     public void nextLevelLoad()
     {
@@ -252,11 +240,10 @@ public class GameManager implements ActionListener
         timely.stop();
         JLabel yousuckLabel = new JLabel("",new ImageIcon("yousuck.jpg"),JLabel.LEFT);
         cp.add(yousuckLabel);
-        game.setContenedor(cp);
-        vistaPrincipal.remove(newPanel);
-        vistaPrincipal.remove(progBarPanel);
-        vistaPrincipal.pack();
-        vistaPrincipal.setVisible (true);
+        remove(newPanel);
+        remove(progBarPanel);
+        pack();
+        setVisible (true);
         timely.stop();
         catFileName-=01;
     if(catFileName<01)
@@ -284,5 +271,35 @@ public class GameManager implements ActionListener
             JOptionPane.showMessageDialog(frame, "You Stupid Ass, Did you eat to much for dinner?  Move Faster!");//the entire game has ended.
         }
     }//end class
+    
+private HighScore hs;  
+private int catFileName=01;
+private Container cp;
+private FileLoader fl = new FileLoader();
+//create menu items
+private JMenuBar menuBar;
+private JMenu newMenu;
+private JMenuItem itemExit;
+private JMenuItem newGameItem;
+private JMenuItem openFileItem;
+private JMenuItem itemEnterName;
+private JMenuItem itemHighScore;
+private JMenuItem itemSaveScore;
+//end create menu items
+private JLabel shagLabel;
+private int ix;
+private int jx;
+private int timeLeft;
+private JPanel progBarPanel;
+private JLabel[][] labelMatrix;
+private TimeCalculator timeCalc;
+private  JProgressBar progressBar;
 
+private JPanel newPanel;// = new JPanel();
+private TheArchitect theArc = new TheArchitect();
+private String[][] scrapMatrix; 
+private  Timer timely; 
+private TimeKeeper tk;
+private  String playerName;
+private int levelNum=1;
 }//end class    

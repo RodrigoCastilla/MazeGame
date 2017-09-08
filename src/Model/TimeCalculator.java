@@ -2,8 +2,14 @@ package Model;
 
 public class TimeCalculator
 {
-int minutes=0;
-int seconds=0;
+    private int minutes;
+    private int seconds;
+
+
+    public TimeCalculator() {
+        minutes=0;
+        seconds=0;
+    }
 
     public void calcTimeforMaze(int totalDimonds, int xSize, int ySize)//some kinda method that determines the time a player has for each level based on the level size and dimonds.
     {
