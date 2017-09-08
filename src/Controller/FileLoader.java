@@ -6,6 +6,9 @@ import java.io.*;
 import javax.swing.*;
 public class FileLoader
 {
+    /*  Función que toma el nombre del archivo con la extensión .maze para permitir cargar el nivel a través de su búsqueda. 
+        Capturará una excepción en caso de que el formato no sea el esperado.
+    */
     public void loadFile(String fileName)
     {  
         try
@@ -26,6 +29,10 @@ public class FileLoader
         }//end catch
      }//end load file method
      
+    /*  Carga la matriz con el contenido del archivo leido.
+        Permite detectar en caso de que hayan fallos en la estructura.    
+    */
+    
      public void MatrixLoader(String fileTextLine, int lineNum)throws gameFileError
      {
         // exitCount=0;//we must reset our variables to zero for the next level.              
@@ -66,7 +73,9 @@ public class FileLoader
                
         
      }//end matrixloader method
-     
+     /*
+        Devuelve la matriz del juego.
+     */
      public String[][] getGameMatrix()
      { int exitCount=0;
          int i1=0;
@@ -125,6 +134,8 @@ public class FileLoader
       return exitYCord; 
    }
    
+   //Contador de diamantes.
+   //Éstos son leidos uno por uno dentro de la matriz.
    public int dimondCount()
    {
        int totalDimonds=0;

@@ -11,19 +11,14 @@ public class ScoreGui /*extends JDialog*/ implements ActionListener
 {
     public ScoreView vistaPuntajes;
 
-    /*public ScoreGui()
-    {
-        vistaPuntajes = new ScoreView();
-        //super();
-    }*/
-    public /*JLabel*/ ScoreGui()//the ScoreGui Method displays the scores in order from lowest to highest.
+    public ScoreGui()//the ScoreGui Method displays the scores in order from lowest to highest.
     {
         vistaPuntajes = new ScoreView();
         vistaPuntajes.getOkBtb().addActionListener(this);
         //JLabel mainLabel = null;
         Container cp = vistaPuntajes.getContenedor();
         int lineNum=0;
-             try{
+             try{   //Lectura del archivo donde están almacenados los puntajes máximos.
                     String line = "";
                     String[] myScoreArray = new String[100];
                     for(int i=0; i<myScoreArray.length;i++)
@@ -58,15 +53,12 @@ public class ScoreGui /*extends JDialog*/ implements ActionListener
                              JPanel scorePanel = new JPanel();
                              scorePanel.setLayout(new GridLayout(recordsCount,recordsCount));
                              String scoreContent = "";
+                             //Ciclo que guarda todos los puntajes en una cadena, para poder ser presentados en un cuadro de texto.
                                  for(int i=0; i<myScoreArray.length;i++)
                                  {
                                      if(myScoreArray[i]!=" ")
                                      {
-                                         //mainLabel=new JLabel(myScoreArray[i], JLabel.LEFT);//display the score on the screen
                                          scoreContent += (myScoreArray[i] +"\n");
-                                         //System.out.println(myScoreArray[i]);
-                                         //scorePanel.add(mainLabel);
-                                         //vistaPuntajes.setScorePanel(scorePanel);
                                      }
                                  }//end for loop
                                  vistaPuntajes.getTextScore().setText(scoreContent);

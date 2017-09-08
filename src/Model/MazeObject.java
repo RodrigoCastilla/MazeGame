@@ -28,23 +28,3 @@ public class MazeObject extends JLabel//inner class for each maze object, aka wa
         return newPanel;
     }
     }
-/*public class MazeObject extends JLabel {
-    private JPanel panel;
-    
-    
-        public MazeObject(JPanel panel)
-        {
-           panel = panel;
-        }
-        public JLabel addLabel(String fileName){
-            fileName+=".png";
-            JLabel fancyLabel;
-            fancyLabel = new JLabel("",new ImageIcon(fileName),JLabel.LEFT);
-            panel.add(fancyLabel);
-            return fancyLabel;
-        }
-        
-    public JPanel getPanel(){
-        return panel;
-    }
-}*/

@@ -21,6 +21,10 @@ public class GameManager extends JFrame implements ActionListener
 	private static final long serialVersionUID = 1L;
         private MainView vistaPrincipal;
 
+        /* Constructor del Manejador del juego
+            *Se inicializan las variables.
+            *Se asignan los listener a los botones para poder ser usados a través de Action Performed.
+        */
     public GameManager()
     {
         super("Maze, a game of wondering"); //call super to initilize title bar of G.U.I.
@@ -95,7 +99,10 @@ public class GameManager extends JFrame implements ActionListener
            cp.add(dimondsPanel,BorderLayout.SOUTH);
        }//end method
    }//end inner class
-    
+    /*
+        Método que detecta las acciones realizadas para su correcta redirección a métodos específicos.
+        ->Toma la acción obtenida por los listener en los botones.
+    */
     public void actionPerformed(ActionEvent e){
         if (e.getSource() == vistaPrincipal.getExitBtn())//exit on the menu bar
         {
@@ -221,9 +228,6 @@ public class GameManager extends JFrame implements ActionListener
     }
  
     Action updateCursorAction = new AbstractAction() {
-    /**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 	public void actionPerformed(ActionEvent e)throws SlowAssPlayer //this inner class generates an exeption if the player takes to long to finish a level 
@@ -276,15 +280,6 @@ private HighScore hs;
 private int catFileName=01;
 private Container cp;
 private FileLoader fl = new FileLoader();
-//create menu items
-private JMenuBar menuBar;
-private JMenu newMenu;
-private JMenuItem itemExit;
-private JMenuItem newGameItem;
-private JMenuItem openFileItem;
-private JMenuItem itemEnterName;
-private JMenuItem itemHighScore;
-private JMenuItem itemSaveScore;
 //end create menu items
 private JLabel shagLabel;
 private int ix;

@@ -6,6 +6,8 @@ import java.beans.*;
 
 public class HighScore
 {
+    //Función que captura los puntajes altos bajo un formato el cual después será guardado por otra clase.
+    //Funciona para ser revisado en la vista de Highscores.
     public void addHighScore(String name, int min, int sec,int level)
     {
         try{
