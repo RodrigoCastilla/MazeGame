@@ -1,29 +1,35 @@
-package Controller;
-
-import View.ScoreView;
+package maze;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import javax.swing.*;
-import java.util.*;
-import java.io.*;
-public class ScoreGui /*extends JDialog*/ implements ActionListener
-{
-    public ScoreView vistaPuntajes;
 
-    public ScoreGui()//the ScoreGui Method displays the scores in order from lowest to highest.
+import javax.swing.*;
+
+import java.io.*;
+public class ScoreGui extends JDialog implements ActionListener
+{
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public ScoreGui()
     {
-        vistaPuntajes = new ScoreView();
-        vistaPuntajes.getOkBtb().addActionListener(this);
-        //JLabel mainLabel = null;
-        Container cp = vistaPuntajes.getContenedor();
-        int lineNum=0;
-             try{   //Lectura del archivo donde están almacenados los puntajes máximos.
+        super();
+    }
+    public void displayScoreGui()//the ScoreGui Method displays the scores in order from lowest to highest.
+    {
+        Container cp = getContentPane();
+        JButton ok = new JButton("OK");
+        ok.setActionCommand("OK");
+        ok.addActionListener(this);
+
+        cp.add(ok,BorderLayout.SOUTH);
+             try{
                     String line = "";
                     String[] myScoreArray = new String[100];
                     for(int i=0; i<myScoreArray.length;i++)
                         myScoreArray[i]=" ";
-                        String line1="";
+
                     BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream("scores.txt")));//read in the scores data
                     int recordsCount=0;
                     while((line = br1.readLine()) != null) 
@@ -52,32 +58,31 @@ public class ScoreGui /*extends JDialog*/ implements ActionListener
                            }//end else
                              JPanel scorePanel = new JPanel();
                              scorePanel.setLayout(new GridLayout(recordsCount,recordsCount));
-                             String scoreContent = "";
-                             //Ciclo que guarda todos los puntajes en una cadena, para poder ser presentados en un cuadro de texto.
                                  for(int i=0; i<myScoreArray.length;i++)
                                  {
                                      if(myScoreArray[i]!=" ")
                                      {
-                                         scoreContent += (myScoreArray[i] +"\n");
+                                         mainLabel=new JLabel(myScoreArray[i], JLabel.LEFT);//display the score on the screen
+                                         scorePanel.add(mainLabel);
                                      }
                                  }//end for loop
-                                 vistaPuntajes.getTextScore().setText(scoreContent);
-                                cp.add(scorePanel);
-                                vistaPuntajes.setContenedor(cp);
+                                cp.add(scorePanel); 
                            }//end very first if
-                     }//end first while loop            
+                     }//end first while loop   
+                    br1.close();
                 }//end try
                 catch(IOException ex) {
                     JFrame frame = new JFrame("Alert");
                     JOptionPane.showMessageDialog(frame, "Problem with scores.txt file.  Cant load high Scores");
                 }//end catch
-        vistaPuntajes.pack();
-        vistaPuntajes.setVisible (true);
-        //return mainLabel;
+        pack();
+        setVisible (true);
+        
     }//end constructor
     
     public void actionPerformed(ActionEvent e)
     {
-        vistaPuntajes.dispose();
+        dispose();
     }
+private JLabel mainLabel;
 }//end class

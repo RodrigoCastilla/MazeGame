@@ -1,8 +1,6 @@
-package Model;
-
+package maze;
 public class TimeKeeper
 {
-                                               //Método que inicializa y almacena los datos del tiempo. Acepta dos entreros (uno para minutos y otro para segundos).
     public void setTimeKeeper(int min, int sec)//a class to keep track of the total seconds and minuntes the player has used to get to a level
 	{ 
 	   if(sec + seconds <=60)

@@ -1,15 +1,16 @@
-package Model;
+package maze;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
 import javax.swing.*;
 //Your life is the sum of a remainder of an unbalanced equation inherent to the programming
 //of the matrix
 
 public class TheArchitect extends JFrame
 {
-   public void setExit(int x, int y)//records the location of the exit so we can show it when its time
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+public void setExit(int x, int y)//records the location of the exit so we can show it when its time
    {
        WallXCord=x;
        WallYCord=y;  
@@ -23,10 +24,10 @@ public class TheArchitect extends JFrame
     {
        int x=0;
        int y=0;
-       int found=0;
+       //int found=0;
        globalTotalDimonds=totalDimonds; //use this later for the gui dimond count
        nextLevel(false); //dont go to the next level yet.
-       String[][] junkMatrix=currentMatrix;//we will be updating currentMatrix  
+      
         for (int i = 0; i < currentMatrix.length; i++) //for loop will find were the player is now
         {
         for (int j = 0; j < currentMatrix[i].length; j++) 
@@ -35,7 +36,7 @@ public class TheArchitect extends JFrame
            {
             x=i;//record the players position
             y=j;
-            found = 1;
+           // found = 1;
             break;
            }
         }}//end both for loops
@@ -100,7 +101,12 @@ public class TheArchitect extends JFrame
     
     private class StupidAssMove extends RuntimeException
     {
-         public StupidAssMove(String event)
+         /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public StupidAssMove(String event)
          {
              JFrame frame = new JFrame("Warning");
              JOptionPane.showMessageDialog(frame, "You Stupid Ass, Ran into something did you?");

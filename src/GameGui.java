@@ -1,49 +1,71 @@
-package Controller;
-import Controller.FileLoader;
-import Controller.ScoreGui;
-import Model.HighScore;
-import Model.TheArchitect;
-import Model.TimeCalculator;
-import Model.TimeKeeper;
-import View.MainView;
+package maze;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
 
-public class GameManager extends JFrame implements ActionListener
+public class GameGui extends JFrame implements ActionListener
 {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-        private MainView vistaPrincipal;
+	public static void main(String[] args)
+    {
+        new GameGui();
+    }
 
-        /* Constructor del Manejador del juego
-            *Se inicializan las variables.
-            *Se asignan los listener a los botones para poder ser usados a través de Action Performed.
-        */
-    public GameManager()
+    public GameGui()
     {
         super("Maze, a game of wondering"); //call super to initilize title bar of G.U.I.
         cp=getContentPane();
         shagLabel = new JLabel("",new ImageIcon("yeababyyea.jpg"),JLabel.LEFT);//GUI background for initial load
         cp.add(shagLabel);
         //Add Exit & New Game Menu Items
-        vistaPrincipal = new MainView();
-        this.vistaPrincipal.getExitBtn().addActionListener(this);
-        this.vistaPrincipal.getStartBtn().addActionListener(this);
-        this.vistaPrincipal.getLoadBtn().addActionListener(this);
-        this.vistaPrincipal.getEnterNameBtn().addActionListener(this);
-        this.vistaPrincipal.getHighscoreBtn().addActionListener(this);
-        this.vistaPrincipal.getSaveHSBtn().addActionListener(this);           
+        itemExit = new JMenuItem("Exit");
+        itemExit.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_X, KeyEvent.CTRL_MASK));//press CTRL+X to exit if you want
+        itemSaveScore = new JMenuItem("Save High Score");
+        itemSaveScore.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_S, KeyEvent.CTRL_MASK));//press CTRL+S to save high score if you want
+        itemHighScore=new JMenuItem("High Score");
+        itemHighScore.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_H, KeyEvent.CTRL_MASK));//press CTRL+H to view high score if you want
+        itemEnterName = new JMenuItem("Enter Player Name");
+        itemEnterName.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_N, KeyEvent.CTRL_MASK));//press CTRL+N to enter your name if you want
+        newGameItem = new JMenuItem("New Game");
+        openFileItem = new JMenuItem("Open Maze File.");
+        openFileItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_O, KeyEvent.CTRL_MASK));//press CTRL+O to open a level if you want
+        newGameItem.setActionCommand("New Game");
+        newGameItem.addActionListener(this);
+        itemEnterName.setActionCommand("EnterName");
+        itemEnterName.addActionListener(this);
+        itemSaveScore.setActionCommand("SaveScore");
+        itemSaveScore.addActionListener(this);
+        itemHighScore.setActionCommand("HighScore");
+        itemHighScore.addActionListener(this);
+        itemExit.setActionCommand("Exit");
+        itemExit.addActionListener(this);
+        openFileItem.setActionCommand("Open");
+        openFileItem.addActionListener(this);
+        newMenu = new JMenu("File");
+        newMenu.add(newGameItem);
+        newMenu.add(itemEnterName);
+        newMenu.add(openFileItem);
+        newMenu.add(itemHighScore);
+        newMenu.add(itemSaveScore);
+        newMenu.add(itemExit);
+        
+        //Add Exit Menu Item
+        //Add Menu Bar
+        menuBar = new JMenuBar();
+        menuBar.add(newMenu);
+        setJMenuBar(menuBar);
+        //Add Menu Bar     
         newPanel = new JPanel();
         hs = new HighScore();
         tk=new TimeKeeper();
         pack();
-        vistaPrincipal.setVisible (true);//show our menu bar and shagLabel.. Yea baby Yea! Whoa.. to much java.
+        setVisible (true);//show our menu bar and shagLabel.. Yea baby Yea! Whoa.. to much java.
     }//end constructor
      
     private class MyKeyHandler extends KeyAdapter //captures arrow keys movement
@@ -99,42 +121,35 @@ public class GameManager extends JFrame implements ActionListener
            cp.add(dimondsPanel,BorderLayout.SOUTH);
        }//end method
    }//end inner class
-    /*
-        Método que detecta las acciones realizadas para su correcta redirección a métodos específicos.
-        ->Toma la acción obtenida por los listener en los botones.
-    */
-    public void actionPerformed(ActionEvent e){
-        if (e.getSource() == vistaPrincipal.getExitBtn())//exit on the menu bar
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getActionCommand().equals("Exit"))//exit on the menu bar
         {
              new Timer(1000, updateCursorAction).stop();
              System.exit(0); //exit the system.   
         }
-        else if (e.getSource() == vistaPrincipal.getStartBtn())//new game on the menu bar
+        else if (e.getActionCommand().equals("New Game"))//new game on the menu bar
         {
-        
-                fl.loadFile("level1.maz");//load the file we need
-                theArc.setExit(fl.ExitXCord(),fl.ExitYCord());
-                loadMatrixGui("newLoad"); 
-             //maybe implent this feature later
+             return; //maybe implent this feature later
         }//end New Game Command
-        else if(e.getSource() == vistaPrincipal.getEnterNameBtn())//Allows user to enter their name for high score
+        else if(e.getActionCommand().equals("EnterName"))//Allows user to enter their name for high score
         {
-               JOptionPane optionPane = new JOptionPane();
-               playerName=optionPane.showInputDialog("Please Enter your Earth Name");      
+               playerName=JOptionPane.showInputDialog("Please Enter your Earth Name");      
         }
-        else if(e.getSource() == vistaPrincipal.getHighscoreBtn())//Displays the high scores
+        else if(e.getActionCommand().equals("HighScore"))//Displays the high scores
         {
-            ScoreGui sg = new ScoreGui();   
+            ScoreGui sg = new ScoreGui();
+            sg.displayScoreGui();;   
         }
-        else if(e.getSource() == vistaPrincipal.getEnterNameBtn())//allows the user to save their score at any time.
+        else if(e.getActionCommand().equals("SaveScore"))//allows the user to save their score at any time.
         {
             hs.addHighScore(playerName,tk.getMinutes(),tk.getSeconds(),levelNum);
         }
-        else if(e.getSource() == vistaPrincipal.getLoadBtn())//to start the game you have to open a maze file. this is on the menu
+        else if(e.getActionCommand().equals("Open"))//to start the game you have to open a maze file. this is on the menu
         {
             JFileChooser chooser = new JFileChooser();
-            int returnVal = chooser.showOpenDialog(cp);
-            //game.setContenedor(cp);
+            int returnVal = chooser.showOpenDialog(this);
             if(returnVal == JFileChooser.APPROVE_OPTION) 
             {
                 fl.loadFile(chooser.getSelectedFile().getName());//load the file we need
@@ -142,7 +157,7 @@ public class GameManager extends JFrame implements ActionListener
                 loadMatrixGui("newLoad"); 
             }
          }
-    }
+     }//end actionPerformed method
      
      public void loadMatrixGui(String event)
      {
@@ -228,6 +243,9 @@ public class GameManager extends JFrame implements ActionListener
     }
  
     Action updateCursorAction = new AbstractAction() {
+    /**
+		 * 
+		 */
 		private static final long serialVersionUID = 1L;
 
 	public void actionPerformed(ActionEvent e)throws SlowAssPlayer //this inner class generates an exeption if the player takes to long to finish a level 
@@ -280,6 +298,15 @@ private HighScore hs;
 private int catFileName=01;
 private Container cp;
 private FileLoader fl = new FileLoader();
+//create menu items
+private JMenuBar menuBar;
+private JMenu newMenu;
+private JMenuItem itemExit;
+private JMenuItem newGameItem;
+private JMenuItem openFileItem;
+private JMenuItem itemEnterName;
+private JMenuItem itemHighScore;
+private JMenuItem itemSaveScore;
 //end create menu items
 private JLabel shagLabel;
 private int ix;
